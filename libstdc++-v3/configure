@@ -14091,7 +14091,7 @@ if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
        fi
        ;;
 
-    *.$objext)
+    *.$objext | *.$libext)
        # This assumes that the test object file only shows up
        # once in the compiler output.
        if test "$p" = "conftest.$objext"; then
@@ -15308,8 +15308,8 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu* | uclinuxfdpiceabi)
   version_type=linux
   need_lib_prefix=no
   need_version=no
-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
-  soname_spec='${libname}${release}${shared_ext}$major'
+  library_names_spec='$libname${shared_ext} ${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major'
+  soname_spec='$libname${shared_ext}'
   finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
@@ -15799,7 +15799,7 @@ lt_prog_compiler_pic_CXX="$glibcxx_compiler_pic_flag $glibcxx_compiler_shared_fl
 pic_mode='default'
 
 # Eliminate -lstdc++ addition to postdeps for cross compiles.
-postdeps_CXX=`echo " $postdeps_CXX " | sed 's, -lstdc++ ,,g'`
+postdeps_CXX=`echo " $postdeps_CXX " | sed 's, -lc++ ,,g'`
 
 # Possibly disable most of the library.
 ## TODO: Consider skipping unncessary tests altogether in this case, rather
@@ -21995,7 +21995,6 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
   ac_save_CXXFLAGS="$CXXFLAGS"
   CXXFLAGS="$CXXFLAGS -fno-exceptions"
   ac_save_LIBS="$LIBS"
-  LIBS="$LIBS -lpthread"
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthread_cond_clockwait" >&5
 $as_echo_n "checking for pthread_cond_clockwait... " >&6; }
@@ -22077,7 +22076,6 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
   ac_save_CXXFLAGS="$CXXFLAGS"
   CXXFLAGS="$CXXFLAGS -fno-exceptions"
   ac_save_LIBS="$LIBS"
-  LIBS="$LIBS -lpthread"
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthread_mutex_clocklock" >&5
 $as_echo_n "checking for pthread_mutex_clocklock... " >&6; }
@@ -22159,7 +22157,6 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
   ac_save_CXXFLAGS="$CXXFLAGS"
   CXXFLAGS="$CXXFLAGS -fno-exceptions"
   ac_save_LIBS="$LIBS"
-  LIBS="$LIBS -lpthread"
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthread_rwlock_clockrdlock, pthread_wlock_clockwrlock" >&5
 $as_echo_n "checking for pthread_rwlock_clockrdlock, pthread_wlock_clockwrlock... " >&6; }
@@ -26232,7 +26229,7 @@ rm -f core conftest.err conftest.$ac_objext \
       if test $gcc_cv_have_tls = yes; then
 						chktls_save_CFLAGS="$CFLAGS"
 	thread_CFLAGS=failed
-	for flag in '' '-pthread' '-lpthread'; do
+	for flag in '' '-pthread'; do
 	  CFLAGS="$flag $chktls_save_CFLAGS"
 	  if test x$gcc_no_link = xyes; then
   as_fn_error $? "Link tests are not allowed after GCC_NO_EXECUTABLES." "$LINENO" 5
@@ -38787,7 +38784,7 @@ rm -f core conftest.err conftest.$ac_objext \
       if test $gcc_cv_have_tls = yes; then
 						chktls_save_CFLAGS="$CFLAGS"
 	thread_CFLAGS=failed
-	for flag in '' '-pthread' '-lpthread'; do
+	for flag in '' '-pthread'; do
 	  CFLAGS="$flag $chktls_save_CFLAGS"
 	  if test x$gcc_no_link = xyes; then
   as_fn_error $? "Link tests are not allowed after GCC_NO_EXECUTABLES." "$LINENO" 5
@@ -42216,7 +42213,7 @@ rm -f core conftest.err conftest.$ac_objext \
       if test $gcc_cv_have_tls = yes; then
 						chktls_save_CFLAGS="$CFLAGS"
 	thread_CFLAGS=failed
-	for flag in '' '-pthread' '-lpthread'; do
+	for flag in '' '-pthread'; do
 	  CFLAGS="$flag $chktls_save_CFLAGS"
 	  if test x$gcc_no_link = xyes; then
   as_fn_error $? "Link tests are not allowed after GCC_NO_EXECUTABLES." "$LINENO" 5
@@ -45677,7 +45674,7 @@ rm -f core conftest.err conftest.$ac_objext \
       if test $gcc_cv_have_tls = yes; then
 						chktls_save_CFLAGS="$CFLAGS"
 	thread_CFLAGS=failed
-	for flag in '' '-pthread' '-lpthread'; do
+	for flag in '' '-pthread'; do
 	  CFLAGS="$flag $chktls_save_CFLAGS"
 	  if test x$gcc_no_link = xyes; then
   as_fn_error $? "Link tests are not allowed after GCC_NO_EXECUTABLES." "$LINENO" 5
@@ -50771,7 +50768,6 @@ syscall (SYS_gettid); syscall (SYS_futex, &lk, 0, 0, 0);
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
   save_LIBS="$LIBS"
-	   LIBS="-lpthread $LIBS"
 	   if test x$gcc_no_link = xyes; then
   as_fn_error $? "Link tests are not allowed after GCC_NO_EXECUTABLES." "$LINENO" 5
 fi
@@ -52189,7 +52185,7 @@ $as_echo_n "checking for gthreads library... " >&6; }
 
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include "gthr.h"
+#define __GTHREADS_CXX0X 1
 int
 main ()
 {
@@ -52227,7 +52223,7 @@ $as_echo "#define _GLIBCXX_HAS_GTHREADS 1" >>confdefs.h
     # does not use it.
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include "gthr.h"
+#include "pthread.h"
 int
 main ()
 {
@@ -52247,7 +52243,7 @@ else
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
     if test x"$ac_gthread_use_pthreads" = x"yes"; then
-      ac_fn_cxx_check_type "$LINENO" "pthread_rwlock_t" "ac_cv_type_pthread_rwlock_t" "#include \"gthr.h\"
+      ac_fn_cxx_check_type "$LINENO" "pthread_rwlock_t" "ac_cv_type_pthread_rwlock_t" "#include \"pthread.h\"
 "
 if test "x$ac_cv_type_pthread_rwlock_t" = xyes; then :
 

@@ -33,7 +33,11 @@
 #include <typeinfo>
 #include <exception>
 #include <cstddef>
+#if defined(__arm__)
+#include "unwind-arm.h"
+#else
 #include "unwind.h"
+#endif
 #include <bits/atomic_word.h>
 #include <cxxabi.h>
 

@@ -28,7 +28,7 @@
 #include <cstdio>	// for std::fprintf, stderr
 namespace std
 {
-  [[__noreturn__]]
+  /* [[__noreturn__]] */
   void
   __glibcxx_assert_fail(const char* file, int line,
 			const char* function, const char* condition) noexcept
