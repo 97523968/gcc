@@ -160,7 +160,7 @@ extern int quadmath_snprintf (char *str, size_t size,
 #define FLT128_MAX_10_EXP 4932
 
 
-#define HUGE_VALQ __builtin_huge_valq()
+#define HUGE_VALQ __builtin_huge_valf128()
 /* The following alternative is valid, but brings the warning:
    (floating constant exceeds range of ‘__float128’)  */
 /* #define HUGE_VALQ (__extension__ 0x1.0p32767Q) */

@@ -12867,7 +12867,7 @@ else
 
     __float128 bar (__float128 x)
     {
-      return x * __builtin_huge_valq ();
+      return x * __builtin_huge_valf128 ();
     }
 
 int
@@ -12922,7 +12922,7 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 
     __float128 bar (__float128 x)
     {
-      return x * __builtin_huge_valq ();
+      return x * __builtin_huge_valf128 ();
     }
 
 int

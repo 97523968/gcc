@@ -186,9 +186,11 @@ __quadmath_printf_fp (struct __quadmath_printf_file *fp,
   /* Flag whether wbuffer is malloc'ed or not.  */
   int buffer_malloced = 0;
 
-  auto wchar_t hack_digit (void);
+  void *hack_digit_return;
+  wchar_t hack_digit_result;
+  goto proc_hack_digit_end;
 
-  wchar_t hack_digit (void)
+proc_hack_digit:
     {
       mp_limb_t hi;
 
@@ -217,7 +219,8 @@ __quadmath_printf_fp (struct __quadmath_printf_file *fp,
 		  /* We're not prepared for an mpn variable with zero
 		     limbs.  */
 		  fracsize = 1;
-		  return L_('0') + hi;
+		  hack_digit_result = L_('0') + hi;
+		  goto *hack_digit_return;
 		}
 	    }
 
@@ -226,8 +229,11 @@ __quadmath_printf_fp (struct __quadmath_printf_file *fp,
 	    frac[fracsize++] = _cy;
 	}
 
-      return L_('0') + hi;
+      hack_digit_result = L_('0') + hi;
+      goto *hack_digit_return;
     }
+proc_hack_digit_end:
+    ;
 
   /* Figure out the decimal point character.  */
 #ifdef USE_NL_LANGINFO
@@ -904,7 +910,10 @@ __quadmath_printf_fp (struct __quadmath_printf_file *fp,
 	while (intdig_no < intdig_max)
 	  {
 	    ++intdig_no;
-	    *wcp++ = hack_digit ();
+	    hack_digit_return = &&hack_digit_done_1;
+	    goto proc_hack_digit;
+	  hack_digit_done_1:
+	    *wcp++ = hack_digit_result;
 	  }
 	significant = 1;
 	if (info->alt
@@ -928,7 +937,10 @@ __quadmath_printf_fp (struct __quadmath_printf_file *fp,
 	   || (fracdig_no < fracdig_max && (fracsize > 1 || frac[0] != 0)))
       {
 	++fracdig_no;
-	*wcp = hack_digit ();
+	hack_digit_return = &&hack_digit_done_2;
+	goto proc_hack_digit;
+  hack_digit_done_2:
+	*wcp = hack_digit_result;
 	if (*wcp++ != L_('0'))
 	  significant = 1;
 	else if (significant == 0)
@@ -941,7 +953,10 @@ __quadmath_printf_fp (struct __quadmath_printf_file *fp,
 
     /* Do rounding.  */
     last_digit = wcp[-1] != decimalwc ? wcp[-1] : wcp[-2];
-    next_digit =hack_digit ();
+    hack_digit_return = &&hack_digit_done_3;
+    goto proc_hack_digit;
+  hack_digit_done_3:
+    next_digit = hack_digit_result;
 
     if (next_digit != L_('0') && next_digit != L_('5'))
       more_bits = true;
