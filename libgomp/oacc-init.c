@@ -808,7 +808,7 @@ get_property_any (int ord, acc_device_t d, acc_device_property_t prop)
   struct goacc_thread *thr = goacc_thread ();
 
   if (d == acc_device_current && thr && thr->dev)
-    return thr->dev->openacc.get_property_func (thr->dev->target_id, prop);
+    return thr->dev->openacc.get_property_func (thr->dev->target_id, (enum goacc_property) prop);
 
   gomp_mutex_lock (&acc_device_lock);
 
@@ -830,7 +830,7 @@ get_property_any (int ord, acc_device_t d, acc_device_property_t prop)
 
   assert (dev);
 
-  return dev->openacc.get_property_func (dev->target_id, prop);
+  return dev->openacc.get_property_func (dev->target_id, (enum goacc_property) prop);
 }
 
 size_t
@@ -871,11 +871,19 @@ ialias (acc_get_property_string)
    The function just forwards its argument to __builtin_acc_on_device.  It does
    not verify that the argument is a valid acc_device_t enumeration value.  */
 
+#if !defined(__clang__)
 int __attribute__ ((__optimize__ ("O2")))
 acc_on_device (acc_device_t dev)
 {
   return __builtin_acc_on_device (dev);
 }
+#else
+int
+acc_on_device (acc_device_t dev)
+{
+  return (dev & 0xfffffffd) == 0;
+}
+#endif
 
 ialias (acc_on_device)
 
