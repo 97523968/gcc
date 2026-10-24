@@ -122,7 +122,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
       unsigned int retries = 100;
       unsigned int val;
 
-      while (__builtin_ia32_rdseed_si_step(&val) == 0) [[__unlikely__]]
+      while (__builtin_ia32_rdseed32_step(&val) == 0) [[__unlikely__]]
 	{
 	  if (--retries == 0)
 	    {
