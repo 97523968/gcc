@@ -62,7 +62,7 @@ void __gnat_sigtramp (int signo, void *si, void *ucontext,
   TRAMP_COMMON (signo, si, mcontext, handler);
 }
 
-#include <sigtramp-android-asm.h>
+#include "sigtramp-android-asm.h"
 
 asm (SIGTRAMP_START(TRAMP_COMMON));
 asm (SIGTRAMP_BODY);

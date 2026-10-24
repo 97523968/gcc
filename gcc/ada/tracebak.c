@@ -603,7 +603,7 @@ is_return_from(void *symbol_addr, void *ret_addr)
    The condition is expressed the way above because we cannot reliably rely on
    any other macro from the base compiler when compiling stage1.  */
 
-#ifdef USING_ARM_UNWINDING
+#if defined(USING_ARM_UNWINDING) && !defined(__clang__)
 /* This value is not part of the enumerated reason codes defined in unwind.h
    for ARM style unwinding, but is used in the included "C" code, so we
    define it to a reasonable value to avoid a compilation error.  */

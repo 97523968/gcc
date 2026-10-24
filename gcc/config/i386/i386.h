@@ -39,6 +39,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 /* Redefines for option macros.  */
 
+#include <stdbool.h>
 #define TARGET_CMPXCHG16B	TARGET_CX16
 #define TARGET_CMPXCHG16B_P(x)	TARGET_CX16_P(x)
 

@@ -291,7 +291,7 @@ ADA_INCLUDES_FOR_SUBDIR = -I. -I$(fsrcdir)/ada
 	$(CC) -c -x assembler $< $(OUTPUT_OPTION)
 
 .c.o:
-	$(CC) -c $(ALL_CFLAGS) $(ADA_CFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) $< $(OUTPUT_OPTION)
+	$(CLANG) -c $(ALL_CFLAGS) $(ADA_CFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) $< $(OUTPUT_OPTION)
 
 .adb.o:
 	$(CC) -c $(ALL_ADAFLAGS) $(ADA_INCLUDES) $< $(OUTPUT_OPTION)
@@ -683,22 +683,22 @@ gnatlib-shared-default:
 	     LN_S="$(LN_S)" \
              gnatlib
 	$(RM) $(RTSDIR)/libgna*$(soext)
-	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared $(GNATLIBCFLAGS) \
+	cd $(RTSDIR); $(CLANG) -shared $(GNATLIBCFLAGS) \
 		$(PICFLAG_FOR_TARGET) \
-		-o libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
+		-o libgnat$(soext) \
 		$(GNATRTL_NONTASKING_OBJS) $(LIBGNAT_OBJS) \
-		$(SO_OPTS)libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
+		$(SO_OPTS)libgnat$(soext) \
 		$(MISCLIB) -lm
-	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared $(GNATLIBCFLAGS) \
+	cd $(RTSDIR); $(CLANG) -shared $(GNATLIBCFLAGS) \
 		$(PICFLAG_FOR_TARGET) \
-		-o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
+		-o libgnarl$(soext) \
 		$(GNATRTL_TASKING_OBJS) \
-		$(SO_OPTS)libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
+		$(SO_OPTS)libgnarl$(soext) \
 		$(THREADSLIB)
-	cd $(RTSDIR); $(LN_S) libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
-		libgnat$(soext)
-	cd $(RTSDIR); $(LN_S) libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
-		libgnarl$(soext)
+	cd $(RTSDIR); $(LN_S) libgnat$(soext) \
+		libgnat$(hyphen)$(LIBRARY_VERSION)$(soext)
+	cd $(RTSDIR); $(LN_S) libgnarl$(soext) \
+		libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext)
 
 	# Create static libgnat and libgnarl compiled with -fPIC
 	$(RM) $(RTSDIR)/libgnat_pic$(arext) $(RTSDIR)/libgnarl_pic$(arext)
@@ -896,7 +896,7 @@ ADA_RTL_DSO_DIR = $(toolexeclibdir)
 # some targets.
 
 tracebak.o  : tracebak.c
-	$(CC) -c $(ALL_CFLAGS) $(ADA_CFLAGS) $(ALL_CPPFLAGS) \
+	$(CLANG) -c $(ALL_CFLAGS) $(ADA_CFLAGS) $(ALL_CPPFLAGS) \
 	      $(INCLUDES) $(NO_OMIT_ADAFLAGS) $< $(OUTPUT_OPTION)
 
 adadecode.o : adadecode.c adadecode.h
@@ -923,29 +923,29 @@ terminals.o : terminals.c
 vx_stack_info.o : vx_stack_info.c
 
 raise-gcc.o : raise-gcc.c raise.h
-	$(CC) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
+	$(CLANG) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
 		-iquote $(srcdir) -iquote $(ftop_srcdir)/libgcc \
 		$(ALL_CPPFLAGS) $(INCLUDES) $< $(OUTPUT_OPTION)
 
 cio.o     : cio.c
-	$(CC) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
+	$(CLANG) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
 	         $(ALL_CPPFLAGS) $(INCLUDES) $< $(OUTPUT_OPTION)
 
 init.o    : init.c adaint.h raise.h
-	$(CC) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
+	$(CLANG) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
 	         $(ALL_CPPFLAGS) $(INCLUDES) $< $(OUTPUT_OPTION)
 
 initialize.o : initialize.c raise.h
-	$(CC) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
+	$(CLANG) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
 	         $(ALL_CPPFLAGS) $(INCLUDES) $< $(OUTPUT_OPTION)
 
 link.o : link.c
-	$(CC) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
+	$(CLANG) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
 		$(ALL_CPPFLAGS) $(INCLUDES_FOR_SUBDIR) \
 		$< $(OUTPUT_OPTION)
 
 targext.o : targext.c
-	$(CC) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
+	$(CLANG) -c $(ALL_CFLAGS) $(ADA_CFLAGS) \
 		-iquote $(srcdir) \
 		$(ALL_CPPFLAGS) $(INCLUDES_FOR_SUBDIR) \
 		$< $(OUTPUT_OPTION)
