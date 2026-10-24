@@ -111,7 +111,7 @@ GOMP_taskloop (void (*fn) (void *), void *data, void (*cpyfn) (void *, void *),
 	num_tasks = ~0UL;
 #endif
       if ((flags & GOMP_TASK_FLAG_STRICT)
-	  && num_tasks != ~0ULL)
+	  && num_tasks != ~0UL)
 	{
 	  UTYPE mod = n % grainsize;
 	  task_step = (TYPE) grainsize * step;

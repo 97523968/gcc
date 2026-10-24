@@ -37,7 +37,7 @@ gomp_ptrlock_get_slow (gomp_ptrlock_t *ptrlock)
   int *intptr;
   uintptr_t oldval = 1;
 
-  __atomic_compare_exchange_n (ptrlock, &oldval, 2, false,
+  __atomic_compare_exchange_n (ptrlock, (void **) &oldval, (void *) 2, false,
 			       MEMMODEL_RELAXED, MEMMODEL_RELAXED);
 
   /* futex works on ints, not pointers.
