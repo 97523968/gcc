@@ -70,6 +70,7 @@ for k in $possible_real_kinds; do
       10) ctype="long double" ; cplxtype="complex long double" ; suffix="l" ;;
       # If we have a REAL(KIND=16), it is either long double or _Float128
       16) if [ $long_double_kind -ne 16 ]; then
+	    break
 	    ctype="_Float128"
 	    cplxtype="_Complex _Float128"
 	    echo "#define GFC_REAL_16_IS_FLOAT128"

@@ -182,7 +182,7 @@ set_fpu_trap_exceptions (int trap, int notrap)
     {
       unsigned int cw_sse;
 
-      __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (cw_sse));
+      __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (cw_sse));
 
       /* The SSE exception masks are shifted by 7 bits.  */
       cw_sse |= (exc_clr << 7);
@@ -191,7 +191,7 @@ set_fpu_trap_exceptions (int trap, int notrap)
       /* Clear stalled exception flags.  */
       cw_sse &= ~_FPU_EX_ALL;
 
-      __asm__ __volatile__ ("%vldmxcsr\t%0" : : "m" (cw_sse));
+      __asm__ __volatile__ ("vldmxcsr\t%0" : : "m" (cw_sse));
     }
 }
 
@@ -215,7 +215,7 @@ get_fpu_trap_exceptions (void)
     {
       unsigned int cw_sse;
 
-      __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (cw_sse));
+      __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (cw_sse));
 
       /* The SSE exception masks are shifted by 7 bits.  */
       mask |= (cw_sse >> 7);
@@ -253,7 +253,7 @@ get_fpu_except_flags (void)
     {
       unsigned int cw_sse;
 
-      __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (cw_sse));
+      __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (cw_sse));
       excepts |= cw_sse;
     }
 
@@ -319,9 +319,9 @@ set_fpu_except_flags (int set, int clear)
   {
     unsigned int cw_sse;
 
-    __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (cw_sse));
+    __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (cw_sse));
     cw_sse &= ~exc_clr;
-    __asm__ __volatile__ ("%vldmxcsr\t%0" : : "m" (cw_sse));
+    __asm__ __volatile__ ("vldmxcsr\t%0" : : "m" (cw_sse));
   }
 
   local_feraiseexcept (exc_set);
@@ -369,13 +369,13 @@ set_fpu_rounding_mode (int round)
     {
       unsigned int cw_sse;
 
-      __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (cw_sse));
+      __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (cw_sse));
 
       /* The SSE round control bits are shifted by 13 bits.  */
       cw_sse &= ~(_FPU_RC_MASK << 13);
       cw_sse |= round_mode << 13;
 
-      __asm__ __volatile__ ("%vldmxcsr\t%0" : : "m" (cw_sse));
+      __asm__ __volatile__ ("vldmxcsr\t%0" : : "m" (cw_sse));
     }
 }
 
@@ -387,7 +387,7 @@ get_fpu_rounding_mode (void)
 #ifdef __SSE_MATH__
   unsigned int cw;
 
-  __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (cw));
+  __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (cw));
 
   /* The SSE round control bits are shifted by 13 bits.  */
   round_mode = cw >> 13;
@@ -438,7 +438,7 @@ get_fpu_state (void *state)
   __asm__ __volatile__ ("fldcw\t%0" : : "m" (envp->__control_word));
 
   if (has_sse())
-    __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (envp->__mxcsr));
+    __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (envp->__mxcsr));
 }
 
 void
@@ -451,7 +451,7 @@ set_fpu_state (void *state)
   __asm__ __volatile__ ("fldenv\t%0" : : "m" (*envp));
 
   if (has_sse())
-    __asm__ __volatile__ ("%vldmxcsr\t%0" : : "m" (envp->__mxcsr));
+    __asm__ __volatile__ ("vldmxcsr\t%0" : : "m" (envp->__mxcsr));
 }
 
 
@@ -473,7 +473,7 @@ get_fpu_underflow_mode (void)
   if (!has_sse())
     return 1;
 
-  __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (cw_sse));
+  __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (cw_sse));
 
   /* Return 0 for abrupt underflow (flush to zero), 1 for gradual underflow.  */
   return (cw_sse & MXCSR_FTZ) ? 0 : 1;
@@ -488,13 +488,13 @@ set_fpu_underflow_mode (int gradual)
   if (!has_sse())
     return;
 
-  __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (cw_sse));
+  __asm__ __volatile__ ("vstmxcsr\t%0" : "=m" (cw_sse));
 
   if (gradual)
     cw_sse &= ~MXCSR_FTZ;
   else
     cw_sse |= MXCSR_FTZ;
 
-  __asm__ __volatile__ ("%vldmxcsr\t%0" : : "m" (cw_sse));
+  __asm__ __volatile__ ("vldmxcsr\t%0" : : "m" (cw_sse));
 }
 
