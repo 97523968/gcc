@@ -2566,7 +2566,7 @@ ifeq ($(strip $(filter-out aarch64% linux%,$(target_cpu) $(target_os))),)
   s-tpopsp.adb<libgnarl/s-tpopsp__tls.adb \
   s-taspri.ads<libgnarl/s-taspri__posix.ads \
   $(TRASYM_DWARF_UNIX_PAIRS) \
-  s-tsmona.adb<libgnat/s-tsmona__linux.adb \
+  s-tsmona.adb<libgnat/s-tsmona__android.adb \
   $(ATOMICS_TARGET_PAIRS) \
   $(ATOMICS_BUILTINS_TARGET_PAIRS) \
   $(GNATRTL_128BIT_PAIRS) \
@@ -2577,8 +2577,10 @@ ifeq ($(strip $(filter-out aarch64% linux%,$(target_cpu) $(target_os))),)
   EXTRA_GNATRTL_NONTASKING_OBJS += $(GNATRTL_128BIT_OBJS)
   EXTRA_GNATRTL_NONTASKING_OBJS += $(TRASYM_DWARF_UNIX_OBJS)
   EXTRA_GNATRTL_TASKING_OBJS=s-linux.o a-exetim.o
+  EXTRA_LIBGNAT_OBJS+=sigtramp-android.o
+  EXTRA_LIBGNAT_SRCS+=sigtramp.h sigtramp-android-asm.h
   EH_MECHANISM=-gcc
-  THREADSLIB=-lpthread -lrt
+  THREADSLIB=
   GNATLIB_SHARED=gnatlib-shared-dual
   MISCLIB = -ldl
   GMEM_LIB = gmemlib

@@ -54,7 +54,7 @@
    been certified, so leave it out of CERT runtimes as well.  */
 
 #if !defined GXX_EH_INTEROP
-# if defined(__clang_major__) && defined(__clang_minor__)
+# if 0 && defined(__clang_major__) && defined(__clang_minor__)
 /* GNAT-LLVM does not support C++ imports.  */
 #  define GXX_EH_INTEROP 0
 # elif defined(CERT)

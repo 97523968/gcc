@@ -464,9 +464,8 @@ package System.OS_Interface is
    pragma Import (C, pthread_mutexattr_setprotocol);
 
    function pthread_mutexattr_setprioceiling
-     (attr        : access pthread_mutexattr_t;
-      prioceiling : int) return int;
-   pragma Import (C, pthread_mutexattr_setprioceiling);
+     (ignored_attr        : access pthread_mutexattr_t;
+      ignored_prioceiling : int) return int is (0);
 
    type struct_sched_param is record
       sched_priority : int;  --  scheduling priority
