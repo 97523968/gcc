@@ -58,6 +58,9 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 static const char *ENV_PPID = "GFORTRAN_SHMEM_PPID";
 static const char *ENV_BASE = "GFORTRAN_SHMEM_BASE";
+#if defined(__linux__)
+static const char *ENV_FD = "GFORTRAN_SHMEM_FD";
+#endif
 
 void
 shared_memory_set_env (pid_t pid)
@@ -140,7 +143,11 @@ shared_memory_init (shared_memory_act *mem, size_t size)
       int n = sscanf (env_val, "%d", &ppid);
       assert (n == 1);
     }
+#if !defined(__linux__)
   snprintf (shm_name, SHM_NAME_MAX, "/gfor-shm-%d", ppid);
+#else
+  strlcpy (shm_name, "caf_shmem", SHM_NAME_MAX);
+#endif
   if (base)
     {
       int n = sscanf (base, "%p", &base_ptr);
@@ -154,7 +161,11 @@ shared_memory_init (shared_memory_act *mem, size_t size)
 #ifdef HAVE_MMAP
       int res;
 
+#if !defined(__linux__)
       mem->shm_fd = shm_open (shm_name, O_CREAT | O_RDWR | O_EXCL, 0600);
+#else
+      mem->shm_fd = memfd_create (shm_name, 0);
+#endif
       if (mem->shm_fd == -1)
 	{
 	  perror ("creating shared memory segment failed.");
@@ -167,6 +178,11 @@ shared_memory_init (shared_memory_act *mem, size_t size)
 	  perror ("resizing shared memory segment failed.");
 	  exit (1);
 	}
+#if defined(__linux__)
+      char val[20];
+      snprintf (val, 20, "%d", mem->shm_fd);
+      setenv (ENV_FD, val, 1);
+#endif
 #elif defined(WIN32)
       mem->shm_fd
 	= CreateFileMapping (INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE,
@@ -202,12 +218,21 @@ shared_memory_init (shared_memory_act *mem, size_t size)
   else
     {
 #ifdef HAVE_MMAP
+#if !defined(__linux__)
       mem->shm_fd = shm_open (shm_name, O_RDWR, 0600);
       if (mem->shm_fd == -1)
 	{
 	  perror ("opening shared memory segment failed.");
 	  exit (1);
 	}
+#else
+      const char *env_fd = getenv (ENV_FD);
+      if (!env_fd || (sscanf (env_fd, "%d", &mem->shm_fd) != 1))
+	{
+	  fputs ("opening shared memory segment failed.\n", stderr);
+	  exit (1);
+	}
+#endif
 #elif defined(WIN32)
       mem->shm_fd = OpenFileMapping (FILE_MAP_ALL_ACCESS, FALSE, shm_name);
       if (mem->shm_fd == NULL)
@@ -282,6 +307,7 @@ shared_memory_cleanup (shared_memory_act *mem)
     {
       perror ("closing shm file handle failed. Trying to continue...");
     }
+#if !defined(__linux__)
   if (this_image.image_num == -1)
     {
       char shm_name[SHM_NAME_MAX];
@@ -295,6 +321,7 @@ shared_memory_cleanup (shared_memory_act *mem)
 	  exit (1);
 	}
     }
+#endif
 #elif defined(WIN32)
   if (!UnmapViewOfFile (mem->glbl.base))
     {

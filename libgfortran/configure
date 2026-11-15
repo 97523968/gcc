@@ -18425,7 +18425,6 @@ $as_echo_n "checking for usable process-shared pthread support for caf_shmem... 
   CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#error shmem is not supported on Android
 #include <pthread.h>
 int
 main ()
