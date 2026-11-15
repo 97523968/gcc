@@ -150,6 +150,11 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #endif
 #endif
 
+#if defined(__ANDROID_API__) && __ANDROID_API__ >= 30
+#undef GTHREAD_USE_WEAK
+#define GTHREAD_USE_WEAK 0
+#endif
+
 #ifndef GTHREAD_USE_WEAK
 #define GTHREAD_USE_WEAK 1
 #endif
