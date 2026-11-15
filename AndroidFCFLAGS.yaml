@@ -1,0 +1,5 @@
+FCFLAGS:
+  armeabi-v7a: -march=armv7-a -mfpu=neon -fPIC
+  arm64-v8a: -ffixed-x18 -fPIC
+  x86: -march=i686 -msse3 -mfpmath=sse -mlong-double-64 -fPIC
+  x86_64: -march=x86-64-v2 -mlong-double-128 -fPIC
