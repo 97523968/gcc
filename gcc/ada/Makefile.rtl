@@ -1634,6 +1634,7 @@ ifeq ($(strip $(filter-out %86 linux%,$(target_cpu) $(target_os))),)
   SELECTED_PAIRS=x86-linux
 
   LIBGNAT_TARGET_PAIRS = \
+  a-nallfl.ads<libgnat/a-nallfl__wraplf.ads \
   a-intnam.ads<libgnarl/a-intnam__linux.ads \
   a-synbar.adb<libgnarl/a-synbar__posix.adb \
   a-synbar.ads<libgnarl/a-synbar__posix.ads \
@@ -2892,6 +2893,7 @@ ifeq ($(strip $(filter-out %x86_64 linux%,$(target_cpu) $(target_os))),)
   SELECTED_PAIRS=x86_64-linux
 
   LIBGNAT_TARGET_PAIRS = \
+  a-nallfl.ads<libgnat/a-nallfl__wraplf.ads \
   a-exetim.adb<libgnarl/a-exetim__posix.adb \
   a-exetim.ads<libgnarl/a-exetim__default.ads \
   a-intnam.ads<libgnarl/a-intnam__linux.ads \
